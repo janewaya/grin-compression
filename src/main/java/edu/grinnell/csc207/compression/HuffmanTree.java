@@ -22,8 +22,20 @@ import java.util.Set;
  */
 public class HuffmanTree {
 
+    /**
+     * A class which creates a new Comparator for the purposes of a
+     * PriorityQueue.
+     *
+     */
     public class SpecComp implements Comparator<Node> {
 
+        /**
+         * Specifies to compare two nodes by frequency
+         *
+         * @param nd1 The first node to compare
+         * @param nd2 The second node to compare
+         * @return a 1, 0, or -1 to specify larger, smaller, or equal
+         */
         @Override
         public int compare(Node nd1, Node nd2) {
             if (nd1.freq < nd2.freq) {
@@ -36,6 +48,10 @@ public class HuffmanTree {
         }
     }
 
+    /**
+     * Creates a standard Node class
+     *
+     */
     public class Node {
 
         public Short ch;
@@ -43,6 +59,14 @@ public class HuffmanTree {
         public Node left;
         public Node right;
 
+        /**
+         * Constructs a new Node
+         *
+         * @param ch a short that maps to a character
+         * @param freq the frequency attached to the character
+         * @param left the left Node
+         * @param right the right Node
+         */
         public Node(Short ch, int freq, Node left, Node right) {
             this.ch = ch;
             this.freq = freq;
@@ -50,6 +74,12 @@ public class HuffmanTree {
             this.right = right;
         }
 
+        /**
+         * Constructs a new Node
+         *
+         * @param ch a short that maps to a character
+         * @param freq the frequency attached to the character
+         */
         public Node(Short ch, int freq) {
             this.ch = ch;
             this.freq = freq;
@@ -57,6 +87,13 @@ public class HuffmanTree {
             this.right = null;
         }
 
+        /**
+         * Constructs a new Node
+         *
+         * @param freq the frequency attached to the character
+         * @param left the left Node
+         * @param right the right Node
+         */
         public Node(int freq, Node left, Node right) {
             this.ch = null;
             this.freq = freq;
@@ -65,16 +102,33 @@ public class HuffmanTree {
         }
     }
 
+    /**
+     * Creates a standard Pair class
+     *
+     */
     public class Pair {
 
         public short ch;
         public int code;
 
+        
+        /**
+         * Constructs a new Pair
+         *
+         * @param ch a short that maps to a character
+         * @param code the coded HuffmanTree value attached to the character
+         */
         public Pair(short ch, int code) {
             this.ch = ch;
             this.code = code;
         }
 
+        /**
+         * Sees if two pairs have the same character
+         *
+         * @param tmp a Pair to compare
+         * @return Specifies if two pairs have the same Character
+         */
         public boolean equalsCh(Pair tmp) {
             if (this.ch == tmp.ch) {
                 return true;
@@ -82,6 +136,12 @@ public class HuffmanTree {
             return false;
         }
 
+        /**
+         * Sees if two pairs have the same code
+         *
+         * @param tmp a Pair to compare
+         * @return Specifies if two pairs have the same code
+         */
         public boolean equalsCode(Pair tmp) {
             if (this.code == tmp.code) {
                 return true;
@@ -184,15 +244,22 @@ public class HuffmanTree {
     }
 
     /**
-     *
+     * Specifies the bits associated with the tree in a specified order
+     * 
      * @return the elements of this tree collected via a pre-order traversal
-     *
      */
     public String toListPreorder() {
         String bits = new String("");
         return toListPreorderHelper(bits, this.start);
     }
 
+    /**
+     * Helps to specify the bits associated with the tree in a specified order
+     * 
+     * @param bits The ever growing string of bits to return
+     * @param cur The current node
+     * @return the elements of this tree collected via a pre-order traversal
+     */
     public String toListPreorderHelper(String bits, Node cur) {
         if (cur.ch == null) {
             bits = bits.concat("1");
@@ -249,6 +316,12 @@ public class HuffmanTree {
         out.writeBits(100000000, 9);
     }
 
+    /**
+     * Helps to construct a list of Huffman Tree codes
+     * 
+     * @param cur The current node
+     * @param treeKey The partly constructed code
+     */
     private void makeCodesH(Node cur, ArrayList<Integer> treeKey) {
         if (cur.left == null && cur.right == null) {
             int code = 0;
@@ -272,6 +345,10 @@ public class HuffmanTree {
         }
     }
 
+    /**
+     * Constructs a list of Huffman Tree codes
+     * 
+     */
     public void makeCodes() {
         ArrayList<Integer> treeKey = new ArrayList<Integer>();
         makeCodesH(start, treeKey);
@@ -294,8 +371,7 @@ public class HuffmanTree {
                 Pair tmpPair = new Pair((short) -1, constructedCode);
                 for (int i = 0; i < codes.size(); i++) {
                     if (tmpPair.equalsCode(codes.get(i))) {
-                        ///NOT DECODING FIX
-                        int j = codes.get(i).code;
+                        int j = (int) codes.get(i).ch;
                         String lgh = Integer.toString(j);
                         out.writeBits(j, lgh.length());
                         recievedCode = in.readBit();
@@ -310,6 +386,12 @@ public class HuffmanTree {
         }
     }
 
+    /**
+     * Checks if a code is contained within the Huffman Tree
+     * 
+     * @param codeTest The tested code
+     * @return if it is contained within the Huffman Tree
+     */
     public boolean containsCode(int codeTest) {
         for (int i = 0; i < codes.size(); i++) {
             if (codeTest == (codes.get(i).code)) {
